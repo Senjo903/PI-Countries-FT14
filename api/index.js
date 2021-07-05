@@ -24,7 +24,6 @@ conn.sync({ force: false }).then(async() => {
     }
   })
 }).catch((error) => {
-  //el servidor nunca escucha porque ubo error al conectar en la db
+  //el servidor nunca escucha porque hubo error al conectar en la db
   console.log(error+'')//si adjuntamos un espacio al error solo muestra el detalle del error sin tanto texto
 })
-
