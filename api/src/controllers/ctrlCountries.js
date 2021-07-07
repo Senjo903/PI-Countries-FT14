@@ -1,21 +1,19 @@
-const { Country, activities, Continent } = require('../db.js');
+const { Country, Activity, Continent } = require('../db.js');
 
-async function getGenerator(continent, activities, tipeOrden, order, page) {
+async function getGenerator(filter, options, tipeOrden, order, page) {
     var searchWhere = {
-        //atributes: ['name'],
+        //where = { continent: options }
         order: [[ tipeOrden , order]],
         limit: 10,
         offset: (page-1)*10
     };
     //si no se ellijen todos los continentes agregamos para especificar la busqueda de que contienete
-    if (continent !== 'ALL') {
-       searchWhere.where = { continent: continent };
+    if ( filter === 'continent' && options !== 'ALL') {
+        searchWhere.where = { continent: options };
+    } else if (filter === 'activities') {
+        //searchWhere.where = { activities: options };
     }
-
-    if (activities !== 'ALL'){
-
-    }
-    return await Country.findAndCountAll(searchWhere)
+    const result = await Country.findAndCountAll(searchWhere)
         .then((r)=>{
             //cambiamos valores para que sean mas faciles de leer en el resultado
             let newResult = {};
@@ -23,34 +21,38 @@ async function getGenerator(continent, activities, tipeOrden, order, page) {
             newResult.numberPages = Math.ceil(parseInt(r.count)/10)
             newResult.ActualPage = (page);
             newResult.pageResult = r.rows;
-            return newResult;
+            return [true, newResult]
         }).catch((e)=>{
-            return e
+            return [false, (e+'')]
         });
+        return result;
 }
 
-async function dataValidation(continent, activities, tipeOrden, order, page) {
-    //primero revisamos que tipeOrden, orden y page sean valores validos
-    if (tipeOrden === 'name' || tipeOrden === 'population'){
+async function dataValidation(filter, options, tipeOrden, order, page) {
+    //primero revisamos que filter, tipeOrden, orden y page sean valores validos
+    if (tipeOrden === 'name' || tipeOrden === 'population') {
         if (order === 'ASC' || order === 'DESC'){
-            if (isNaN(page) === false && parseInt(page) >= 0){
-                //buscaremos los continentes validos en la DB para poder compara si es valido el continente recibido
-                const listContinentsResult = await listContinents();
-                //revisamos si continent es valido
-                if(continent === 'ALL' || listContinentsResult.includes(continent)){
-                    //buscaremos las actividades validas en la DB para poder compara si es valido la avtividad recibida
-                    const listActivitiesResult = listActivities();
-                    //revisamos si la actividad es valido
-                    if(activities === 'ALL' || listActivitiesResult.includes(activities)){
-
-                        // ser todos los argumentos validos enviamos true
-                        return true
+            if (isNaN(page) === false && parseInt(page) >= 0) {
+                //si filter es continent revisamos que options sea valido para continent
+                if ( filter === 'continent') {
+                    //buscaremos los continentes validos en la DB para poder comparar si es valido el continente recibido
+                    const listContinentsResult = await listContinents();
+                    if(options === 'ALL' || listContinentsResult.includes(options)){
+                        // todos los datos son validos devolvemos true
+                        return true;
+                    }
+                } else if( filter === 'activities'){
+                    //si filter es activities revisamos que options sea valido para activities
+                    const listActivitiesResult = await listActivities();
+                    if(options === 'ALL' || listActivitiesResult.includes(options)){
+                        // todos los datos son validos devolvemos true
+                        return true;
                     }
                 }
             }
         }
     }
-    //si algun argumento no es valido retornamos false y los datos a devolver
+    //si algun argumento no es valido retornamos false
     return false
 }
 
@@ -60,12 +62,20 @@ async function listContinents() {
         return r.map((v)=>{ return v.dataValues.name});
     },(e) => {
         console.log('hay un error al cargar los continentes: '+ e);
+        return []
     })
     return validContinents
 }
 
-function listActivities() {
-    return ['Pelea en barro', 'nado', 'pesca']
+async function listActivities() {
+    const validActivities = await Activity.findAll({attributes: ['name']}).then((r) => {
+        //retornamos una array con las actividades validas
+        return r.map((v)=>{ return v.dataValues.name});
+    },(e) => {
+        console.log('hay un error al cargar los continentes: '+ e);
+        return []
+    })
+    return validActivities
 }
 
 module.exports = {

@@ -5,13 +5,14 @@ module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('continent', {
     ID: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      unique: true
     },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     }
-  });
+  },{ timestamps: false });
 };

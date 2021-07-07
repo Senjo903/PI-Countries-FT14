@@ -2,7 +2,7 @@ const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
 const { searchData, upData, checkData } = require('./src/controllers/upData');
 
-conn.sync({ force: false }).then(async() => {
+conn.sync({ force: true }).then(async() => {
   //antes de arrancar servidor revisamos si hay datos de paises
   searchData().then((result) => {
     if (result === true) {
@@ -12,9 +12,9 @@ conn.sync({ force: false }).then(async() => {
         console.log('%s listening at 3001'); // eslint-disable-line no-console
       })
     } else {
-      //como no tenemos datos antes de arrancar el servidor primero traemos las ciudades
+      //como no tenemos datos antes de arrancar el servidor primero traemos las ciudades y los subiremos a la db
       upData().then((result) => {
-        //revisamos si todos los datos subieron exitosamente y notificamos posibles errores
+        //revisamos si todos los datos subieron exitosamente y ordenamos la informacion de los errores y los paises subidos correctamente
         checkData(result);
         //ya podemos arrancar el servidor
         server.listen(3001, () => {

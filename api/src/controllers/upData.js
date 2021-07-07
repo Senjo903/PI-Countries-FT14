@@ -4,7 +4,13 @@ const axios = require('axios');
 //cargando db por primera ves si ya hay datos no ara nada solo avisar
 async function searchData() {
     //revisamos si la tabla de paises tiene datos
-    const data = await Country.findOne();
+    const data = await Country.findOne().catch((e) => {
+      console.log('');
+      console.log('no se pudo revisar si habia datos en la DB');
+      console.log(''+e);
+      console.log('');
+      return null;
+    });
     if (data === null) {
         return false;
     } else {
@@ -13,13 +19,26 @@ async function searchData() {
 }
 
 async function upData() {
+  console.log('Buscando datos en api...')
+  //con axios obtenemos los datos de paises
+  const ResultAxios = await axios.get('https://restcountries.eu/rest/v2/all').then((r) => {
+    console.log('');
+    console.log('Busqueda exitosa!!');
+    console.log('');
+    return [true, r]
+  }).catch((e) => {
+    console.log('');
+    console.log('Falla al Buscar en la Api: ' + e);
+    console.log('');
+    return [false, e]
+  });
+  //si salio exitosa la busqueda seguiremos
+  if (ResultAxios[0] === true) {
     //crearemos una array para guardar los nombres de continente de los paises
     const arraycontinents = [];
-    //con axios obtenemos los datos de paises
-    const ResultAxios = await axios.get('https://restcountries.eu/rest/v2/all')
     //en una array pondremos todos los paises obtenidos de la api como objetos ya listos para integrar a nuestra DB
-    const arrayCountrys = Object.values(ResultAxios)[5].map((country) => {
-      //solo guardaremos los datos usandos para la ruta principal
+    const arrayCountrys = Object.values(ResultAxios[1])[5].map((country) => {
+      //solo guardaremos los datos necesarios para la ruta principal
       let result = {
         ID: country.alpha3Code,
         name: country.name,
@@ -41,98 +60,68 @@ async function upData() {
     console.log('');
     const arrayPromisesContinent = [];
     arraycontinents.forEach((name) => {
-      arrayPromisesContinent.push(Continent.create({name: name})
+      arrayPromisesContinent.push(Continent.create({ name: name })
         .then((r)=>{
-          console.log('>> Continente:  ' + name + ' >>  Cargado corectamente en DB')
+          console.log('>> Continente:  ' + name + ' >>  Cargado correctamente en DB')
       }).catch((e)=>{
         //en la e pongo un'' porque de esa forma solo se guarda el texto del error sin tantos detalles.
-        console('>> Continente Error: '+e);
-      }))
+        console.log('>> Continente Error: '+e);
+      })
+      )
     });
+
     Promise.all(arrayPromisesContinent).then(r => {
       //cuando finalize de cargar los continentes pondremos un texto para avisar que empesaran a cargar los paises
-      console.log('--------------------------------------');
       console.log('');
       console.log('Cargando paises a DB...');
       console.log('');
     });
+
     const returnArray = [];
     const arrayPromises = [];
     //crearemos cada pais en nuestra base de datos guardando cada promesa en una array
     arrayCountrys.forEach((country) => {
       arrayPromises.push(Country.create(country)
         .then((r)=>{
-          console.log('>>  ' + country.name + ':  Cargado corectamente en DB')
+          console.log('>>  ' + country.name.charAt(0).toUpperCase() + country.name.slice(1) + ':  Cargado corectamente en DB')
           returnArray.push([true, country.name]);
       }).catch((e)=>{
-        //en la e pongo un'' porque de esa forma solo se guarda el texto del error sin tantos detalles.
-        returnArray.push ([false, e+'']);
+        //guardamos los nombres de paises que tubieron errores para avisar luego
+        returnArray.push([false, (country.name)]);
       }))
     });
-    //retornamos el resultado al finalizar de ejecutar todas las promesas
+    //retornamos el resultado al finalizar todas las promesas agregandole un true para avisar que pudimos terminar todo
     return Promise.all(arrayPromises).then(r => {
-      return returnArray
+      return [ true, returnArray ]
     })
+  }
+  //si fallo la busqueda retornamos una array con falso y de segundo valor el motivo del error
+  return ResultAxios
 }
 
-/*
-async function upData() {
-  //con axios obtenemos los datos de paises
-  const ResultAxios = await axios.get('https://restcountries.eu/rest/v2/all')
-  //en una array pondremos todos los paises obtenidos de la api como objetos ya listos para integrar a nuestra DB
-  const arrayCountrys = Object.values(ResultAxios)[5].map((country) => {
-    //solo guardaremos los datos usandos para la ruta principal
-    let result = {
-      ID: country.alpha3Code,
-      name: country.name,
-      imgURL: country.flag,
-      continent: country.region,
-      capital: country.capital,
-      subregion: country.subregion,
-      area: country.area,
-      population: country.population
-    }
-    return result
-  });
-  console.log('Cargando paises a DB...');
-  console.log('');
-  const returnArray = [];
-  const arrayPromises = [];
-  //crearemos cada pais en nuestra base de datos guardando cada promesa en una array
-  arrayCountrys.forEach((country) => {
-    arrayPromises.push(Country.create(country)
-      .then((r)=>{
-        console.log('>>  ' + country.name + ':  Cargado corectamente en DB')
-        returnArray.push([true, country.name]);
-    }).catch((e)=>{
-      //en la e pongo un'' porque de esa forma solo se guarda el texto del error sin tantos detalles.
-      returnArray.push ([false, e+'']);
-    }))
-  });
-  //retornamos el resultado al finalizar de ejecutar todas las promesas
-  return Promise.all(arrayPromises).then(r => {
-    return returnArray
-  })
-}*/
 
 function checkData(result){
-  //analizaremos la cantidad de errores para notificarlos por si a futuro hay que hacer alguna revision saber que existen
-  let successfullUpload = result.filter((exito) => exito[0] === true).length;
-  let errores = result.filter((error) => error[0] === false).length;
-  console.log('TOTAL: ' + successfullUpload + ' Paises cargados a la DB / TOTAL: ' + errores + ' ERRORES al subir los paises')
-}
-
-async function checkContinent(newContinet){
-  //revisamos si la tabla con el nombre de continente existe sino esta lo creamos
-  const [data, created] = await Country.findOrCreate({
-    where: { name: newContinet },
-  });
-  if (created) {
-      return true;
-  } else {
-      return false;
+  //si la respuesta guarda en el primer valor es true analizaremos los datos guardados en el segundo valor
+  if (result[0]) {
+    //analizaremos la cantidad de errores para notificarlos por si a futuro hay que hacer alguna revision saber que existen
+    let successfullUpload = result[1].filter((exito) => exito[0] === true).length;
+    let errores = result[1].filter((error) => error[0] === false);
+    let erroresNum = errores.length;
+    //si hay errores los listaremos
+    if(erroresNum !== 0){
+      console.log('');
+      console.log('Paises que NO puedieron cargarse correctamente:');
+      console.log('');
+      errores.forEach(element => {
+        console.log('>>  ' + element[1]);
+      });
+    }
+    console.log('');
+    //mostraremos los totales
+    console.log('TOTAL: ' + successfullUpload + ' Paises cargados a la DB / TOTAL: ' + erroresNum + ' ERRORES al subir los paises')
   }
 }
+
 
 module.exports = {
   upData,
