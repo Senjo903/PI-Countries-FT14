@@ -10,8 +10,11 @@ module.exports = (sequelize) => {
         autoIncrement: true
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false,
+      set(value) {
+        this.setDataValue('name', value.toLowerCase());
+      }
     },
     duration: {
         type: DataTypes.STRING,
@@ -25,5 +28,5 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM('1', '2', '3', '4', '5'),
         allowNull: false,
     }
-  });
+  }, { timestamps: false });
 };

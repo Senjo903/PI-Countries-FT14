@@ -1,38 +1,36 @@
+body {
+  background-image: url("img/Mapa_mundi.jpg") ;
+  background-repeat: no-repeat;
+  background-position-x: center;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
 .App {
-  text-align: center;
+  width: 100vw;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media screen and (max-width: 800px) {
+  body {
+      background: #2f1cd8;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  #nav {
+    border-radius: 0 0 0 0;
+    height: 40px;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
-  to {
-    transform: rotate(360deg);
+  #item1 {
+    margin-top: 9px;
+  }
+  #item2 {
+    margin-top: 9px;
+  }
+  #item3 {
+    margin-top: 9px;
   }
 }

@@ -83,7 +83,7 @@ async function upData() {
     arrayCountrys.forEach((country) => {
       arrayPromises.push(Country.create(country)
         .then((r)=>{
-          console.log('>>  ' + country.name.charAt(0).toUpperCase() + country.name.slice(1) + ':  Cargado corectamente en DB')
+          console.log('>>  ' + country.name +':  Cargado corectamente en DB')
           returnArray.push([true, country.name]);
       }).catch((e)=>{
         //guardamos los nombres de paises que tubieron errores para avisar luego

@@ -1,13 +1,15 @@
 const { Router } = require('express');
 const router = Router();
-const { Country } = require('../db.js');
-const { getGenerator, dataValidation } = require('../controllers/ctrlCountries.js');
+const { Country, Continent } = require('../db.js');
+const { getGenerator, dataValidation, listContinents } = require('../controllers/ctrlCountries.js');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
+
 router.get('/', async(req, res) =>{
     if(!req.query.name){// si no hay query toma la ruta /countries
-        const {filter, options, tipeOrden, order, page} = req.body;
+        const { filter, options, tipeOrden, order, page } = req.query;
+        console.log(filter, options, tipeOrden, order, page);
         //primero validaremos la info obtenida con nuestra funcion y segun si tira falso o verdadero seguimos o tiramos una respuesta error
         const resultValidation = await dataValidation(filter, options, tipeOrden, order, page);
         if (resultValidation === false) {
@@ -65,5 +67,6 @@ router.get('/:idPais', async(req, res) =>{
     }
     return res.status(404).json({ error: 'dato invalido debe tener 3 caracteres en mayuscula' });
 });
+
 
 module.exports = router;

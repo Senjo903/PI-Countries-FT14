@@ -12,10 +12,10 @@ module.exports = (sequelize) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
       set(value) {
         this.setDataValue('name', value.toLowerCase());//guardamos el nombre todo en minusculas a futuro esto facilitara las busquedas
-      }
+      },
+      allowNull: false,
     },
     imgURL: {
       type: DataTypes.STRING,
@@ -23,8 +23,10 @@ module.exports = (sequelize) => {
     },
     continent: {
       type: DataTypes.STRING,
-      primaryKey: true,
       allowNull: false,
+      set(value) {
+        this.setDataValue('continent', value.toLowerCase())
+      },
     },
     capital: {
       type: DataTypes.STRING,

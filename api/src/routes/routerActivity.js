@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { Country, Activity } = require('../db.js');
-
+const { listActivities } = require('../controllers/ctrlActivities.js');
 const router = Router();
 
 router.post('/', async (req, res) =>{
@@ -8,7 +8,7 @@ router.post('/', async (req, res) =>{
     //primero verificaremos que todos los datos tengan informacion
     if (name && difficulty && duration && station && countries ){
         //ahora revisaremos que las datos con valores fijos sean validos
-    if (difficulty === '1' || difficulty === '2'||  difficulty === '3'|| difficulty === '4'|| difficulty === '5') {
+    if (parseInt(difficulty) === 1 || parseInt(difficulty) === 2||  parseInt(difficulty) === 3|| parseInt(difficulty) === 4|| parseInt(difficulty) === 5) {
         if (station === 'summer' || station === 'fall' ||  station === 'winter' || station === 'spring') {
             //revisamos que todos los paises sean validos y los que no los retiraremos del array countries si el array queda con 1 dato seguimos sino avisamos que no hay paises validos
             const promisesArray = [];
@@ -44,8 +44,7 @@ router.post('/', async (req, res) =>{
             // si countriesValid es mayor que 0 significa que tenemos valores validos y podemos seguir sino retornaremos valor no valido
             if (countriesValid.length > 0) {
                 //revisamos que name no este ocupado si lo esta avisaremos
-                const availability = await Activity.findOne({ name: name }).catch((e) =>{ console.log('hubo un errro: ' + e)});
-
+                const availability = await Activity.findOne({ where: { name: name } }).catch((e) =>{ console.log('hubo un errro: ' + e)});
                 if (availability === null){
                     return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station}, { include: [Country] })
                         .then((activityResult)=>{
@@ -61,7 +60,7 @@ router.post('/', async (req, res) =>{
                         });
                 } else {
                     //notificamos que la actividad ya existe
-                    return res.send('la actividad ya existe');
+                    return res.status(404).send('la actividad ya existe');
                 }
             }
         }

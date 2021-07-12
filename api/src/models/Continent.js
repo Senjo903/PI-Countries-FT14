@@ -11,8 +11,11 @@ module.exports = (sequelize) => {
       unique: true
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    }
-  },{ timestamps: false });
+      type: DataTypes.STRING,
+      allowNull: false,
+      set(value) {
+        this.setDataValue('name', value.toLowerCase());
+      }
+    },
+  }, { timestamps: false });
 };

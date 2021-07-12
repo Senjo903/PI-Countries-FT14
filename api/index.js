@@ -2,7 +2,7 @@ const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
 const { searchData, upData, checkData } = require('./src/controllers/upData');
 
-conn.sync({ force: true }).then(async() => {
+conn.sync({ force: false }).then(async() => {
   //antes de arrancar servidor revisamos si hay datos de paises
   searchData().then((result) => {
     if (result === true) {

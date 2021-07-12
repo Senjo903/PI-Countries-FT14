@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+.body-preferences {
+    padding: 10px 0;
+}
+.preferences {
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 10px;
+    border-radius: 40px;
+    margin: auto;
+    max-width: 1050px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 16px;
+    padding: 10px 40px;
+}
+
+.preferences-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-data {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.form-search{
+    padding-bottom: 10px;
+    width: 100%;
+}
+.search {
+    height: 30px;
+    width: 470px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+.icon {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 25px;
+}
+
+.border-search {
+    margin: auto;
+    background-color: rgb(109, 109, 109, 0.3);
+    padding: 5px;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.border-selectors {
+    margin: auto;
+    background-color: rgb(109, 109, 109, 0.3);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.border-selector {
+    margin: 0 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.select-form {
+    height: 30px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #000;
+    border-radius: 10px;
+}

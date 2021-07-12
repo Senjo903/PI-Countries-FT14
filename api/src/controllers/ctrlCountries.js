@@ -1,4 +1,5 @@
 const { Country, Activity, Continent } = require('../db.js');
+const { listActivities } = require('./ctrlActivities.js');
 
 async function getGenerator(filter, options, tipeOrden, order, page) {
     var searchWhere = {
@@ -8,8 +9,8 @@ async function getGenerator(filter, options, tipeOrden, order, page) {
         offset: (page-1)*10
     };
     //si no se ellijen todos los continentes agregamos para especificar la busqueda de que contienete
-    if ( filter === 'continent' && options !== 'ALL') {
-        searchWhere.where = { continent: options };
+    if ( filter === 'continent' && options.toLowerCase() !== 'all') {
+        searchWhere.where = { continent: options.toLowerCase() };
     } else if (filter === 'activities') {
         //searchWhere.where = { activities: options };
     }
@@ -37,14 +38,14 @@ async function dataValidation(filter, options, tipeOrden, order, page) {
                 if ( filter === 'continent') {
                     //buscaremos los continentes validos en la DB para poder comparar si es valido el continente recibido
                     const listContinentsResult = await listContinents();
-                    if(options === 'ALL' || listContinentsResult.includes(options)){
+                    if(options.toLowerCase() === 'all' || listContinentsResult.includes(options.toLowerCase())){
                         // todos los datos son validos devolvemos true
                         return true;
                     }
                 } else if( filter === 'activities'){
                     //si filter es activities revisamos que options sea valido para activities
                     const listActivitiesResult = await listActivities();
-                    if(options === 'ALL' || listActivitiesResult.includes(options)){
+                    if(options === 'all' || listActivitiesResult.includes(options.toLowerCase())){
                         // todos los datos son validos devolvemos true
                         return true;
                     }
@@ -65,17 +66,6 @@ async function listContinents() {
         return []
     })
     return validContinents
-}
-
-async function listActivities() {
-    const validActivities = await Activity.findAll({attributes: ['name']}).then((r) => {
-        //retornamos una array con las actividades validas
-        return r.map((v)=>{ return v.dataValues.name});
-    },(e) => {
-        console.log('hay un error al cargar los continentes: '+ e);
-        return []
-    })
-    return validActivities
 }
 
 module.exports = {
