@@ -7,7 +7,7 @@ conn.sync({ force: false }).then(async() => {
   searchData().then((result) => {
     if (result === true) {
       //si da verdadero proseguimos a arrancar el servidor porque ya tenemos datos cargados
-      console.log('la DB ya contiene datos :)')
+      console.log('The DB already contains data');//la base de datos ya contiene datos
       server.listen(3001, () => {
         console.log('%s listening at 3001'); // eslint-disable-line no-console
       })
@@ -23,7 +23,8 @@ conn.sync({ force: false }).then(async() => {
       })
     }
   })
-}).catch((error) => {
+}).catch((e) => {
   //el servidor nunca escucha porque hubo error al conectar en la db
-  console.log(error+'')//si adjuntamos un espacio al error solo muestra el detalle del error sin tanto texto
+  console.log('Error connecting to DB');//error al conectarse a la base de datos
+  console.log('Error: '+ e)
 })

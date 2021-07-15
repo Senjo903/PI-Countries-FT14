@@ -9,7 +9,6 @@ code {
     monospace;
 }
 .App {
-  width: 100vw;
 }
 
 @media screen and (max-width: 800px) {

@@ -19,7 +19,6 @@ export default function TableCountries() {
           return (<CardCountry key={country.ID} data={country}/>)
           })}
         </div>
-        { CountrySearch.resultSearch.pageResult.length > 5 ?( <PaginationBar />):(<br/>)}
       </div>
       </div>
     );

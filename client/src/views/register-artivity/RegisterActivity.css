@@ -3,15 +3,18 @@
     color: rgb(119, 119, 119);
 }
 .star:hover {
-    font-size: 25px;
-    color: rgb(255, 0, 0);
+    color: rgb(255, 60, 0);
 }
 .starUp {
     font-size: 25px;
-    color: rgb(255, 251, 0);
+    color: rgb(211, 207, 0);
+}
+.starUp:hover {
+    color: rgb(255, 60, 0);
 }
 .station {
     font-size: 25px;
+    padding: 10px;
 }
 .summer {
     color: #ff8410;
@@ -25,43 +28,132 @@
 .spring {
     color: #0e681a;
 }
+.stations {
+    display: flex;
+    flex-direction: row;
+}
 .buttonState {
-    text-align: center;
-    width: 130px;
-    height: 35px;
-    border-radius: 10px;
-    border: 1px solid rgb(24, 24, 24);
+    width: 100px;
+    height: 25px;
+    border-radius: 15px;
+    border: 2px solid rgb(24, 24, 24);
     color: #000000;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(109, 109, 109, 0.6);
+    padding: 5px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
 }
 .buttonStateUp {
-    text-align: center;
-    width: 130px;
-    height: 35px;
-    border-radius: 10px;
-    border: 1px solid rgb(24, 24, 24);
     color: #ffffff;
-    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100px;
+    height: 25px;
+    border-radius: 15px;
+    border: 2px solid rgb(134, 134, 134, 0.7);
+    padding: 5px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
 }
-.countries{
+.body-register {
+    padding: 10px 0;
+}
+.register {
+    user-select: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 10px;
+    border-radius: 40px;
+    margin: auto;
+    max-width: 1050px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 16px;
+    padding: 10px 40px;
+}
+.register h1 {
+    text-align: center;
+}
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+.aling-form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-left: 0;
+}
+.aling-form label{
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.register-input {
+    height: 25px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #000;
     border-radius: 10px;
+}
+.register-search {
+    height: 30px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+.countries-lists {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 0px;
     border: 1px solid rgb(24, 24, 24);
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
 }
 .buttonCountry {
-    font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid rgb(24, 24, 24);
+    padding-top: 5px;
+    padding-left: 10px;
+    border-radius: 15px;
+    border: 2px solid rgb(24, 24, 24);
     color: #000000;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(109, 109, 109, 0.6);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
 }
-.buttonCountry:hover {
+.body-countries {
+    padding: 10px 0;
+}
+.countries {
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 10px;
+    border-radius: 40px;
+    margin: auto;
+    max-width: 1050px;
+    font-family: 'Roboto Mono', monospace;
     font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid rgb(24, 24, 24);
-    color: #ffffff;
-    background-color: rgb(43, 43, 43);
+    padding: 10px 40px;
+    flex-direction: column;
 }
-.cross {
+.country-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.countries-results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.country-icon-cross {
     font-size: 15px;
     color: rgb(175, 33, 33);
+    padding: 0 10px 5px 10px;
+}
+.country-icon {
+    font-size: 15px;
+    color: rgb(0, 212, 11);
+    padding: 0 10px 5px 10px;
 }

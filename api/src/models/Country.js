@@ -37,10 +37,10 @@ module.exports = (sequelize) => {
     },
     area: {
       type: DataTypes.STRING,
-      //allowNull: false,
+      allowNull: false,
     },
     population: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     }
   },{ timestamps: false });
 };

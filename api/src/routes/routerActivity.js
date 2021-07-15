@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const { Country, Activity } = require('../db.js');
-const { listActivities } = require('../controllers/ctrlActivities.js');
 const router = Router();
 
 router.post('/', async (req, res) =>{
@@ -23,8 +22,7 @@ router.post('/', async (req, res) =>{
                             }
                             return [true, r.ID]
                         }).catch((e) => {
-                            console.log('hubo un errro: ' + e)
-                            return [false, e]
+                            return [false]
                         }))
                 }
             });
@@ -44,46 +42,43 @@ router.post('/', async (req, res) =>{
             // si countriesValid es mayor que 0 significa que tenemos valores validos y podemos seguir sino retornaremos valor no valido
             if (countriesValid.length > 0) {
                 //revisamos que name no este ocupado si lo esta avisaremos
-                const availability = await Activity.findOne({ where: { name: name } }).catch((e) =>{ console.log('hubo un errro: ' + e)});
+                const availability = await Activity.findOne({ where: { name: name } });
                 if (availability === null){
+                    //si el nombre no esta ocupado ya podemos crear la nueva actividad
                     return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station}, { include: [Country] })
-                        .then((activityResult)=>{
-                        //una ves eteado la actividd con todos los paises que tiene relacion la retornamos
-                        return activityResult.setCountries(countriesValid);
-                        }).then((r) => {
-                            //una ves eteado la actividd con todos los paises que tiene relacion la retornamos
-                            return res.json(r);
+                        .then(async(activityResult)=>{
+                        //seteamos la actividad la actividd con todos los paises
+                        //return activityResult.setCountries(countriesValid);
+                        let resultSet = await activityResult.setCountries(countriesValid);
+                        //una ves seteada la actividd, la retornamos
+                        return res.json({activity: activityResult, countries: resultSet[0].map((country)=>{return country.countryID})});
                         })
                         .catch((e)=>{
-                            // si hay error retornamos el error para avisar
-                            return res.status(404).json({ error: e });
+                            // si hay error notificamos
+                            return res.status(404).json({ error: 'an error occurred and the activity could not be logged' });//ocurrió un error y no se pudo registrar la actividad.
                         });
                 } else {
                     //notificamos que la actividad ya existe
-                    return res.status(404).send('la actividad ya existe');
+                    return res.status(404).send({ error: 'The activity already exists' });//la actividad ya existe
                 }
             }
         }
     }
-    return res.send('datos invalidos');
+    return res.status(404).json({ error: 'There is invalid data' });//hay datos inválidos
     } else {
-        return res.send('faltan datos');
+        return res.status(404).json({ error: 'There is incomplete data' });//hay datos incompletos
     }
 });
 
-router.get('/:idActivity', async(req, res) =>{
-    let activityID = req.params.idActivity;
-        return Activity.findByPk(activityID, {include: [Country]})
-            .then((r) => {
-            if(r === null){
-                return res.status(404).json({ error: 'registro no encontrado' })
-            }
-            return res.json(r)
-            }, (e) => {
-            return res.status(404).json({ error: e+'' });
-            })
+router.get('/:name', async(req, res) =>{
+    let nameActivity = req.params.name;
+    return Activity.findOne({ where: { name: nameActivity.toLowerCase() }, include : [{ model: Country, attributes: ['ID','name','imgURL']}] })
+        .then((r) => {
+        return res.json(r)
+        }, (e) => {
+        return res.status(404).json({ error: 'there was an error when making the query' });//hubo un error al realizar la consulta
+        })
 
-    return res.status(404).json({ error: 'dato invalido debe tener 3 caracteres en mayuscula' });
 });
 
 module.exports = router;

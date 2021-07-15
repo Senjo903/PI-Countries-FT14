@@ -1,33 +1,6 @@
 const { Country, Activity, Continent } = require('../db.js');
 const { listActivities } = require('./ctrlActivities.js');
-
-async function getGenerator(filter, options, tipeOrden, order, page) {
-    var searchWhere = {
-        //where = { continent: options }
-        order: [[ tipeOrden , order]],
-        limit: 10,
-        offset: (page-1)*10
-    };
-    //si no se ellijen todos los continentes agregamos para especificar la busqueda de que contienete
-    if ( filter === 'continent' && options.toLowerCase() !== 'all') {
-        searchWhere.where = { continent: options.toLowerCase() };
-    } else if (filter === 'activities') {
-        //searchWhere.where = { activities: options };
-    }
-    const result = await Country.findAndCountAll(searchWhere)
-        .then((r)=>{
-            //cambiamos valores para que sean mas faciles de leer en el resultado
-            let newResult = {};
-            newResult.count = r.count;
-            newResult.numberPages = Math.ceil(parseInt(r.count)/10)
-            newResult.ActualPage = (page);
-            newResult.pageResult = r.rows;
-            return [true, newResult]
-        }).catch((e)=>{
-            return [false, (e+'')]
-        });
-        return result;
-}
+const { Op } = require("sequelize");
 
 async function dataValidation(filter, options, tipeOrden, order, page) {
     //primero revisamos que filter, tipeOrden, orden y page sean valores validos
@@ -45,7 +18,7 @@ async function dataValidation(filter, options, tipeOrden, order, page) {
                 } else if( filter === 'activities'){
                     //si filter es activities revisamos que options sea valido para activities
                     const listActivitiesResult = await listActivities();
-                    if(options === 'all' || listActivitiesResult.includes(options.toLowerCase())){
+                    if(options.toLowerCase() === 'all' || listActivitiesResult.includes(options.toLowerCase())){
                         // todos los datos son validos devolvemos true
                         return true;
                     }
@@ -57,13 +30,66 @@ async function dataValidation(filter, options, tipeOrden, order, page) {
     return false
 }
 
+async function getGenerator(filter, options, tipeOrden, order, page) {
+    if ( filter === 'continent') {
+        var searchContinent = {
+            order: [[ tipeOrden , order]],
+            limit: 10,
+            offset: (page-1)*10
+        };
+        //si no se ellijen todos los continentes agregamos para especificar la busqueda de que continente
+        if(options.toLowerCase() !== 'all'){
+            searchContinent.where = { continent: options.toLowerCase() };
+        }
+        const resultContinents = await Country.findAndCountAll(searchContinent)
+        .then((r)=>{
+            //cambiamos valores para que sean mas faciles de leer en el resultado
+            let newResult = {};
+            newResult.count = r.count;
+            newResult.numberPages = Math.ceil(parseInt(r.count)/10)
+            newResult.ActualPage = (page);
+            newResult.pageResult = r.rows;
+            return [true, newResult]
+        }).catch((e)=>{
+            return [false]
+        });
+        return resultContinents;
+    } else {
+        var searchActivity = {
+            order: [[ tipeOrden , order]],
+        };
+        if (options.toLowerCase() === 'all') {
+            searchActivity.include = [{ model: Activity, as:'ConAct', attributes: ['ID','name'], where: { name: { [Op.not]: null } } }];
+        } else {
+            searchActivity.include = [{ model: Activity, as:'ConAct', attributes: ['ID','name'], where: { name: options } }];
+        }
+        const resultActivities = await Country.findAll(searchActivity)
+        .then((r)=>{
+            //cambiamos valores para que sean mas faciles de leer en el resultado
+            let newResult = {};
+            newResult.count = r.length;
+            newResult.numberPages = Math.ceil(parseInt(r.length)/10)
+            newResult.ActualPage = (page);
+            if(page > Math.ceil(parseInt(r.length)/10)) {
+                r = [];
+            } else {
+                r = r.slice((0 + ((page-1)*10)),(10 + ((page-1)*10)));
+            }
+            newResult.pageResult = r;
+            return [true, newResult]
+        }).catch((e)=>{
+            return [false]
+        });
+        return resultActivities
+    }
+}
+
 async function listContinents() {
     const validContinents = await Continent.findAll({attributes: ['name']}).then((r) => {
         //retornamos una array con los contienentes validos
         return r.map((v)=>{ return v.dataValues.name});
     },(e) => {
-        console.log('hay un error al cargar los continentes: '+ e);
-        return []
+        return []//hubo un error al cargar los continentes asi que solo retornamos un array sin datos
     })
     return validContinents
 }

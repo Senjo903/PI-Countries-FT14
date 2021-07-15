@@ -5,10 +5,8 @@ async function listActivities() {
         //retornamos una array con las actividades validas
         return r.map((v)=>{ return v.dataValues.name});
     },(e) => {
-        console.log('hay un error al cargar los continentes: '+ e);
-        return []
+        return []//hubo un error al cargar las actividades solo retornamos un array sin datos
     })
-    console.log(validActivities+'<<<')
     return validActivities
 }
 
