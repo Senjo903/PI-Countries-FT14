@@ -1,5 +1,4 @@
-import { GET_COUNTRY, ERROR, GET_PAGE, GET_TARGET, GET_OPTION_FILTER, COUNTRY_DETAIL, CLEAR_COUNTRY} from '../actions'
-
+import { GET_COUNTRY, GET_STATUS, GET_PAGE, GET_TARGET, GET_OPTION_FILTER, COUNTRY_DETAIL, CLEAR_COUNTRY, RESET_ALL, SEARCH_DETAIL, CLEAR_SEARCH } from '../actions'
 const initialState = {
   CountrySearch: {
     searchStatus: 'pending',
@@ -14,7 +13,7 @@ const initialState = {
     resultSearch: {}
   },
   CountryDetail: undefined,
-  activityForm:[]
+  SearchList: undefined,
 }
 
 export default function reducer(state = initialState, { type, payload }) {
@@ -29,9 +28,24 @@ export default function reducer(state = initialState, { type, payload }) {
           resultSearch: payload.resultSearch
         }
     }
-    case ERROR: return {
+    case RESET_ALL: return {
       ...state,
-      CountrySearch: { ...state.CountrySearch, searchStatus: 'complete' }
+      CountrySearch: { ...state.CountrySearch,
+        searchStatus: 'pending',
+        filter: 'continent',
+        optionFilterContinent: 'all',
+        optionFilterActivities: 'all',
+        tipeOrden: 'name',
+        order: 'ASC',
+        page: 1,
+        continentList: ['all'],
+        activitiesList: ['all'],
+        resultSearch: {}
+       }
+    }
+    case GET_STATUS: return {
+      ...state,
+      CountrySearch: { ...state.CountrySearch, searchStatus: payload }
     }
     case GET_PAGE: return {
       ...state,
@@ -53,21 +67,14 @@ export default function reducer(state = initialState, { type, payload }) {
       ...state,
       CountryDetail: payload
     }
+    case SEARCH_DETAIL: return {
+      ...state,
+      SearchList: payload
+    }
+    case CLEAR_SEARCH: return {
+      ...state,
+      SearchList: payload
+    }
     default: return state
   }
 }
-
-/*
-
-
-
-    case RESULT:
-      let{ count, numberPages, actualPage, pageResult } = payload;
-      return {
-        ...state,
-        resultSearch: { count,  numberPages,  actualPage,  pageResult }
-    }
-    case CHANCE_STATUS: return {
-      ...state,
-      searchStatus: payload
-    }*/

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getData, dataError } from '../../actions';
+import { getData, getStatus, resetAll } from '../../actions';
 import TablaCountries from '../../components/TableCountries';
 import Preferences from '../../components/Preferences';
 import axios from 'axios';
@@ -33,55 +33,27 @@ function ListOfCountries() {
         }
         dispatch(getData(dataSearch));
       })).catch(e => {
-        dispatch(dataError(e));
+        dispatch(getStatus('error'));
       })
       }
   })
+  useEffect(()=>{
+    dispatch(resetAll());
+  },[dispatch])
 
   return (
     <div>
-      <Preferences/>
-      <TablaCountries/>
-    </div>
+      {CountrySearch.searchStatus !=='error'?
+      (<div>
+        <Preferences/>
+        <TablaCountries/>
+      </div>):
+      (<span>
+        tubimos un error
+      </span>)
+    }</div>
   )
 };
 
 export default ListOfCountries;
 
-
-
-/*
-function Home() {
-  const targetSearch = useSelector((state) => state.targetSearch);
-  const searchStatus = useSelector((state) => state.searchStatus);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    loading();
-  })
-
-  const loading = async() => {
-    const result = await axios(`/countries?filter=${targetSearch.filter}&options=${targetSearch.options}&tipeOrden=${targetSearch.tipeOrden}&order=${targetSearch.order}&page=${targetSearch.page}`)
-    .then((r) => {
-      dispatch(resultSearch(r.data))
-      return true
-    }).catch((e) => {
-      return false
-    });
-    if (result) {
-      dispatch(statusChange('complete'))
-    } else {
-      dispatch(statusChange('error'))
-    }
-  }
-
-  return (
-    <div>
-      <h1>preferencias:</h1>
-      <div><Preferences/></div>
-      <h1>estado:</h1>
-      <h2>{searchStatus}</h2>
-      <div>
-        { searchStatus ==='complete' ? (<TablaCountries />) : searchStatus ==='error' ? (<ErrorMsj/>): (<h4> esperando </h4>)}
-      </div>
-    </div>
-  )*/

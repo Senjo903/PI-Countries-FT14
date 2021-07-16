@@ -48,7 +48,7 @@
     margin: auto;
     background-color: rgb(109, 109, 109, 0.3);
     padding: 5px;
-    max-width: 500px;
+    max-width: 510px;
     display: flex;
     align-items: center;
     border-radius: 15px;
@@ -78,4 +78,32 @@
     background-color: rgb(255, 255, 255);
     border: 1px solid #000;
     border-radius: 10px;
+}
+#search-box {
+    margin: 0;
+    position: relative;
+    visibility: visible;
+    /*visibility: hidden*/
+}
+#search-countries-list {
+    width: 470px;
+    position: absolute;
+    top: 0;
+    right: -217px;
+}
+#search-countries-list div{
+    padding-top: 7px;
+    background-color:#fff;
+}
+#search-countries-list div:hover{
+    padding-top: 7px;
+    background-color:rgb(212, 212, 212);
+}
+.box-row {
+    display: flex;
+    flex-direction: row;
+}
+.box-column {
+    display: flex;
+    flex-direction: column;
 }

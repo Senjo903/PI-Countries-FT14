@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+.card-activity {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.body-activity{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    text-align: center;
+    border-radius: 30px;
+    background-color: rgb(255, 255, 255, 0.2);
+    padding: 10px;
+    border: 2px solid rgb(58, 58, 58);
+    margin: 10px;
+}
+.activity-label{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: max-content;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 7px;
+    border-radius: 15px;
+}
+.activity-img {
+    width: 300px;
+    height: 190px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+.star-activity {
+    font-size: 18px;
+    color: rgb(119, 119, 119);
+}
+.starUp-activity {
+    font-size: 18px;
+    color: rgb(177, 174, 0);
+}
+.space {
+    margin-left: 5px;
+}
+
+.station-activity {
+    font-size: 18px;
+    margin-left: 5px;
+}
+.summer-activity {
+    color: #ff8410;
+}
+.fall-activity {
+    color: #e6c01a;
+}
+.winter-activity {
+    color: #6cb8bb;
+}
+.spring-activity {
+    color: #0e681a;
+}

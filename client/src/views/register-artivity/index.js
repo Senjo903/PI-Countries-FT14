@@ -10,20 +10,17 @@ import axios from 'axios';
 function RegisterActivity() {
   const [values, setValues] = React.useState({
     status:'',
+    result: undefined,
     activityName: "",
+    activityNameStatus: "",
     difficulty: 1,
     duration: "",
     station: "",
     countries: [],
     countriesResult: [],
-    countryName: ""
+    countryName: "",
+    imgUrl: ""
   });
-  function handleChange(e) {
-    setValues(values => ({
-      ...values,
-      [e.target.name]: e.target.value
-    }))
-  }
   function changeStart(num) {
     return ()=>{
       setValues(values => ({
@@ -66,21 +63,18 @@ function RegisterActivity() {
     setValues(values => ({
       ...values,
       status:'',
-      activityName: "",
+      activityName: '',
+      activityNameStatus: "",
       difficulty: 1,
-      duration: "",
-      station: "",
+      duration: '',
+      station: '',
       countries: [],
       countriesResult: [],
-      countryName: ""
+      countryName: '',
+      imgUrl: ""
     }))
   }
-  function reportError(e) {
-    setValues(values => ({
-      ...values,
-      status:'Tubimos el siguiente error'+e,
-    }))
-  }
+
   function handleChangeSearch(e) {
     setValues(values => ({
       ...values,
@@ -96,19 +90,69 @@ function RegisterActivity() {
       })
     }
   }
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    axios.post('/activity', {
-      name: values.activityName,
-      difficulty: values.difficulty,
-      duration: values.duration,
-      station: values.station,
-      countries: values.countries.map(country =>{return country.ID})
-    }).then((r)=>{
-      ResetForm();
-    }).catch((e) => {
-      reportError(e);
-    })
+    if (values.activityName !== '' && values.duration !== '' && values.station !== '' && values.countries.length !== 0) {
+      try {
+        await axios.post('/activity', {
+          name: values.activityName,
+          difficulty: values.difficulty,
+          duration: values.duration,
+          station: values.station,
+          countries: values.countries.map(country =>{return country.ID}),
+          imgUrl: values.imgUrl
+        }).then((r)=>{
+          ResetForm();
+          setValues(values => ({
+            ...values,
+            status: 'complete', result: r.data
+          }))
+        })
+      } catch (error) {
+        setValues(values => ({
+          ...values,
+          status: 'error', result: error.response.data.error
+        }))
+      }
+    } else {
+      setValues(values => ({
+        ...values,
+        status: 'incomplete'
+      }))
+    }
+  }
+  function handleChange(e) {
+    setValues(values => ({
+      ...values,
+      [e.target.name]: e.target.value
+    }))
+  }
+  function handleChangeActivityName(e) {
+    setValues(values => ({
+      ...values,
+      activityName: e.target.value
+    }))
+    if (e.target.value !=='') {
+      axios(`/activity/${e.target.value}`).then((r) => {
+        if (r.data) {
+          setValues(values => ({
+            ...values,
+            activityNameStatus: false
+          }))
+        } else {
+          setValues(values => ({
+            ...values,
+            activityNameStatus: true
+          }))
+        }
+      }).catch((e) =>{
+      })
+    } else {
+      setValues(values => ({
+        ...values,
+        activityNameStatus: 'es obligatorio escrbir un nombre'
+      }))
+    }
   }
   return (
     <div className="body-register">
@@ -116,11 +160,17 @@ function RegisterActivity() {
       <h1>Register Tourist Activity</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <div className="aling-form">
-          <label>Activity:{values.activityName}</label>
-          <input placeholder="name of the tourist activity" className="register-input" onChange={handleChange} value={values.activityName} name="activityName" type="text"/>
+          <label>
+            Activity: {values.activityName === ''?(<label className="rejected tipe-text1">Required</label>):
+            values.activityNameStatus?(<label className="accepted tipe-text1">available</label>):
+            (<label className="rejected tipe-text1">the activity already exists</label>)}
+          </label>
+          <div>
+            <input placeholder="name of the tourist activity" className="register-input width-input" onChange={handleChangeActivityName} value={values.activityName} name="activityName" type="text"/>
+          </div>
         </div>
         <div className="aling-form">
-          <label>Difficulty: {values.difficulty}</label>
+          <label>Difficulty:</label>
           <div>
           <FaStar onClick={changeStart(1)} className={values.difficulty >= 1 ? 'starUp': 'star'}/>
           <FaStar onClick={changeStart(2)} className={values.difficulty >= 2 ? 'starUp': 'star'}/>
@@ -130,11 +180,13 @@ function RegisterActivity() {
           </div>
           </div>
         <div className="aling-form">
-          <label>Duration: {values.duration}</label>
-          <input className="register-input" onChange={handleChange} value={values.duration} name="duration" type="text"/>
+          <label>Duration: {values.duration !== ''?(<></>):(<label className="rejected tipe-text1">it is mandatory to specify a duration</label>)}</label>
+          <div>
+            <input className="register-input width-input" onChange={handleChange} value={values.duration} name="duration" type="text"/>
+          </div>
         </div>
         <div className="aling-form">
-          <label>Station: {values.station}</label>
+          <label>Station: {values.station !== ''?(<></>):(<label className="rejected tipe-text1">it is mandatory to select a station</label>)}</label>
           <div className="stations">
           <label onClick={changeStation('summer')} className={values.station === 'summer' ? 'buttonStateUp': 'buttonState'}>Summer <FiSun className='station summer' /></label>
           <label onClick={changeStation('fall')} className={values.station === 'fall' ? 'buttonStateUp': 'buttonState'}>Fall <GiFallingLeaf className='station fall'/></label>
@@ -143,7 +195,7 @@ function RegisterActivity() {
           </div>
         </div>
         <div className="aling-form">
-          <label>Countries: {values.countryName}</label>
+          <label>Countries: {values.countries.length !== 0?(<></>):(<label className="rejected tipe-text1">you must select at least one country</label>)}</label>
         </div>
         { values.countries.length !== 0 ?
         (<div className='countries-lists'>
@@ -155,8 +207,8 @@ function RegisterActivity() {
                 </label>
               );
             })}</div>
-        </div>):(<label></label>)}
-        <input className="register-search" type='search' onChange={handleChangeSearch} value={values.countryName} name="countryName" placeholder='search countries...'/><br/>
+        </div>):(<></>)}
+        <input className="register-search" autoComplete="off" type='search' onChange={handleChangeSearch} value={values.countryName} name="countryName" placeholder='search countries...'/><br/>
         <div className='countries-lists'>
           {(values.countryName.length !== 0 && values.countriesResult.length === 0)?
           (<h4>No results</h4>):
@@ -169,13 +221,34 @@ function RegisterActivity() {
           })}
           </div>
         </div>
-        <button type="submit">Create Activity</button><br/>
-        <label>{values.status}</label>
+        <div className="aling-form">
+          <label>Url image: <label className="accepted tipe-text1">opcional</label></label>
+          <input className="register-img" onChange={handleChange} value={values.imgUrl} name="imgUrl" type="text"/>
+        </div>
+        <button className="button-activity" type="submit">Create Activity</button><br/>
       </form>
       </div>
+      {values.status === ''?
+      (<></>):
+      values.status === 'incomplete'?
+      (<div className="register-result">
+        <div className="countries-results">
+        <h3 className="rejected">Missing complete data</h3>
+        </div>
+      </div>):
+      values.status === 'complete'?
+      (<div className="register-result">
+        <div className="countries-results">
+          <h3 className="accepted">The activity: {values.result.activity.name} was registered successfully</h3>
+        </div>
+      </div>):
+      (<div className="register-result">
+        <div className="countries-results">
+          <h3 className="rejected">Error: {values.result}</h3>
+        </div>
+      </div>)}
     </div>
   )
 };
-
 
 export default RegisterActivity;

@@ -30,18 +30,20 @@ export default function PaginationBar() {
             Bottons.push(<label className="button-num" onClick={getNum(page)} key={page}>{page}</label>)
         }
     }
+
     return(
-    <div className="border-pagination">
-    <form onSubmit={handleSubmit}>
-        <div>
-            {parseInt(CountrySearch.resultSearch.ActualPage) > 1?
-            (<label onClick={prev} className="button-num">previous</label>):
-            (<label></label>)}
-            {Bottons.map((boton)=>{return boton})}
-            {parseInt(CountrySearch.resultSearch.ActualPage) < parseInt(CountrySearch.resultSearch.numberPages)?
-            (<label className="button-num" onClick={next}>next</label>):
-            (<label></label>)}
+        <div className="border-pagination">
+            <form onSubmit={handleSubmit}>
+                <div>
+                    {parseInt(CountrySearch.resultSearch.ActualPage) > 1?
+                    (<label onClick={prev} className="button-num">previous</label>):
+                    (<label></label>)}
+                    {Bottons.map((boton)=>{return boton})}
+                    {parseInt(CountrySearch.resultSearch.ActualPage) < parseInt(CountrySearch.resultSearch.numberPages)?
+                    (<label className="button-num" onClick={next}>next</label>):
+                    (<label></label>)}
+                </div>
+            </form>
         </div>
-    </form>
-    </div>)
+    )
 };

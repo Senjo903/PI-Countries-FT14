@@ -13,24 +13,23 @@ function toUpper(str) {
 }
 
 export default function CardCountry(props) {
-
     return (
         <div className="body-card">
             <div className="card">
-            <div className="card-one">
-                { toUpper(props.data.name) }
-            </div>
-            <div className="card-two">
-                <img className="card-img" src={props.data.imgURL} alt={props.data.name}/>
-            </div>
-            <div className="card-three">
-                <label>
-                    Continent: { (props.data.continent).charAt(0).toUpperCase() + (props.data.continent).slice(1) }
-                </label>
-                poblacio: {props.data.population}<br/>
-                detalles: <Link to={`/country-details/${props.data.ID}`}>mas...</Link>
-            </div>
+                <div className="card-one">
+                    { toUpper(props.data.name) }
+                </div>
+                <div className="card-two">
+                    <img className="card-img" src={props.data.imgURL} alt={props.data.name}/>
+                </div>
+                <div className="card-three">
+                    <label>
+                        Continent: { (props.data.continent).charAt(0).toUpperCase() + (props.data.continent).slice(1) }
+                    </label>
+                    poblacio: {props.data.population}
+                    detalles: <Link to={`/country-details/${props.data.ID}`}>mas...</Link>
+                </div>
             </div>
         </div>
-        )
+    )
 };

@@ -5,184 +5,145 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getTarget, getFilter } from '../../actions';
 import './Preferences.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom'
 
 export default function Preferences() {
-    const CountrySearch = useSelector((state) => state.CountrySearch);
-    const dispatch = useDispatch();
-    function handleSubmit(e) {
-        e.preventDefault()
-    }
-    function handleChange(e) {
-      if (e.target.name === 'optionFilter'){
-        if (CountrySearch.filter === 'continent'){
-          dispatch(getFilter( { continent: e.target.value, activities: 'all' }));
-        } else {
-          dispatch(getFilter({ continent: 'all', activities: e.target.value }));
-        }
+  const [values, setValues] = React.useState({
+    inputSearch:''
+  });
+  function changeSearch(e) {
+    setValues(values => ({
+      ...values,
+      [e.target.name]: e.target.value
+    }))
+    const reset = () => {
+      let box = document.getElementById('search-box');
+      while (box.firstChild) {
+        box.removeChild(box.firstChild);
       }
-        dispatch(getTarget({tipe: e.target.name, value: e.target.value}));
     }
+    const box = document.getElementById('search-box');
+    reset();
 
-    return(
-    <div className="body-preferences">
-      <div className="preferences">
-        <form onSubmit={handleSubmit}  className="preferences-form">
-          <div className="form-search">
-            <div className="border-search">
-              <input type='search' name="countryName" placeholder='buscar paises...' className="search"/>
-              <FaSearch className="icon"/>
-            </div>
-          </div>
-          <div className="form-data">
-            <div className="border-selectors">
-              <div className="border-selector">
-                {CountrySearch.filter === 'continent'?
-                (<AiOutlineGlobal className="icon"/>):
-                (<IoFitnessSharp className="icon"/>)}
-                <select className="select-form" onChange={handleChange} name="filter" defaultValue={CountrySearch.filter}>
-                  <option value="continent">Continente</option>
-                  <option value="activities">Actividad</option>
-                </select>
-              </div>
-              <div className="border-selector">
-                {CountrySearch.filter === 'continent'?(
-                <select className="select-form" onChange={handleChange} name="optionFilter" defaultValue={CountrySearch.optionFilterContinent}>
-                  <option value='all'>all</option>
-                  {CountrySearch.continentList.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-                </select>) :(
-                <select className="select-form" onChange={handleChange} name="optionFilter" defaultValue={CountrySearch.optionFilterActivities}>
-                  <option value='all'>all</option>
-                  {CountrySearch.activitiesList.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-                </select>)}
-              </div>
-              <div className="border-selector">
-                {CountrySearch.tipeOrden === 'name'?
-                (<IoText className="icon"/>):
-                (<IoPeopleCircleOutline className="icon"/>)}
-                <select className="select-form" onChange={handleChange} name="tipeOrden" defaultValue={CountrySearch.tipeOrden}>
-                  <option value="name">Nombre</option>
-                  <option value="population">Poblacion</option>
-                </select>
-              </div>
-              <div className="border-selector">
-                {CountrySearch.tipeOrden === 'name'?
-                (CountrySearch.order === 'ASC'?
-                (<FaSortAlphaDown className="icon"/>):
-                (<FaSortAlphaDownAlt className="icon"/>)):
-                (CountrySearch.order === 'ASC'?
-                (<FaSortNumericDown className="icon"/>):
-                (<FaSortNumericDownAlt className="icon"/>))}
-                <select className="select-form" onChange={handleChange} name="order" defaultValue={CountrySearch.order}>
-                  <option value="ASC">Acendente</option>
-                  <option value="DESC">Decendente</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>)
-};
-/*
-<form onSubmit={handleSubmit}>
-        <label>
-          filter: {targetSearch.filter}, options1: {targetSearch.optionContinent}, options2: {targetSearch.optionActivity}, tipeOrden: {targetSearch.tipeOrden}, order: {targetSearch.order}, page: {targetSearch.page}
-        </label>
-        <br/>
-        <label> Orden:
-          <select name="filter" defaultValue={targetSearch.filter}>
-          <option value="continent">Continente</option>
-          <option value="activities">Actividad</option>
-          </select>
-          {targetSearch.filter === 'continent'?(
-            <div>Opciones:
-              <select name="optionContinent" defaultValue={targetSearch.optionContinent}>
-                {lists.continent.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-              </select>
-            </div>) :(
-          <div>Opciones:
-          <select name="optionActivity" defaultValue={targetSearch.optionActivity}>
-            {lists.activities.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-          </select>
-        </div>)}
-        </label><br/>
-        <label> Orden:
-          <select name="tipeOrden" defaultValue={targetSearch.tipeOrden}>
-          <option value="name">Nombre</option>
-          <option value="population">Poblacion</option>
-          </select>
-        </label><br/>
-        <label> Orden:
-            <select name="order" defaultValue={targetSearch.order}>
-            <option value="ASC">Acendente</option>
-            <option value="DESC">Decendente</option>
-          </select>
-        </label>
-        <button>hola</button>
-      </form>
+    if (e.target.value !=='') {
+      const boxList = document.createElement('div');
+      boxList.id = 'search-countries-list'
+      axios(`/countries?name=${e.target.value}`).then((r) => {
+        if(parseInt(r.data.results) > 0) {
+          r.data.msj.forEach(element => {
+            let elementBox = document.createElement('div');
+            elementBox.id = element.ID;
+            elementBox.textContent = element.name;
+            elementBox.onclick = ()=>{
+              reset();
+              setValues(values => ({
+                ...values,
+                inputSearch: element.name
+              }))
+            }
+            boxList.appendChild(elementBox);
+          });
+          box.appendChild(boxList);
+        } else {
+          let elementBox = document.createElement('div');
+          elementBox.textContent = 'no results';
+          boxList.appendChild(elementBox);
+          box.appendChild(boxList);
+        }
+      }).catch((e) =>{
+          var elementBox = document.createElement('div');
+          elementBox.textContent = '404 Found';
+          boxList.appendChild(elementBox);
+          box.appendChild(boxList);
+      })
+    }
+  }
 
-/*const lists = useSelector((state) => state.lists);
+  const CountrySearch = useSelector((state) => state.CountrySearch);
   const dispatch = useDispatch();
-
-
-  //dispatch(changeTarget({ continent:['all', 'lola', 'lklo']}))
   function handleSubmit(e) {
-    e.preventDefault()
+      e.preventDefault()
   }
-  async function handleSubmit(e) {
-    e.preventDefault()
-    const result = await axios(`/countries?filter=${targetSearch.filter}&options=${targetSearch.options}&tipeOrden=${targetSearch.tipeOrden}&order=${targetSearch.order}&page=${targetSearch.page}`)
-    .then((r) => {
-      dispatch(resultSearch(r.data))
-      return true
-    }).catch((e) => {
-      return false
-    });
-    if (result) {
-      dispatch(statusChange('complete'))
-    } else {
-      dispatch(statusChange('error'))
+
+  function handleChange(e) {
+    if (e.target.name === 'optionFilter'){
+      if (CountrySearch.filter === 'continent'){
+        dispatch(getFilter( { continent: e.target.value, activities: 'all' }));
+      } else {
+        dispatch(getFilter({ continent: 'all', activities: e.target.value }));
+      }
     }
+      dispatch(getTarget({tipe: e.target.name, value: e.target.value}));
   }
-*/
 
-/*
-<h1>preferecnias</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          filter: {targetSearch.filter}, options1: {targetSearch.optionContinent}, options2: {targetSearch.optionActivity}, tipeOrden: {targetSearch.tipeOrden}, order: {targetSearch.order}, page: {targetSearch.page}
-        </label>
-        <br/>
-        <label> Orden:
-          <select name="filter" defaultValue={targetSearch.filter}>
-          <option value="continent">Continente</option>
-          <option value="activities">Actividad</option>
-          </select>
-          {targetSearch.filter === 'continent'?(
-            <div>Opciones:
-              <select name="optionContinent" defaultValue={targetSearch.optionContinent}>
-                {lists.continent.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-              </select>
-            </div>) :(
-          <div>Opciones:
-          <select name="optionActivity" defaultValue={targetSearch.optionActivity}>
-            {lists.activities.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
-          </select>
-        </div>)}
-        </label><br/>
-        <label> Orden:
-          <select name="tipeOrden" defaultValue={targetSearch.tipeOrden}>
-          <option value="name">Nombre</option>
-          <option value="population">Poblacion</option>
-          </select>
-        </label><br/>
-        <label> Orden:
-            <select name="order" defaultValue={targetSearch.order}>
-            <option value="ASC">Acendente</option>
-            <option value="DESC">Decendente</option>
-          </select>
-        </label>
-        <button>hola</button>
-      </form>
-
-      */
+  if (CountrySearch.searchStatus === 'complete') {
+    return(
+      <div className="body-preferences">
+        <div className="preferences">
+          <form onSubmit={handleSubmit}  className="preferences-form">
+            <div className="form-search">
+              <div className="border-search box-column">
+                <div className="box-row">
+                  <input type='search' autoComplete="off" onChange={changeSearch} name="inputSearch" value={values.inputSearch} placeholder="buscar paises..." className="search"/>
+                  <Link to={`/search-countries/${values.inputSearch}`} ><FaSearch className="icon"/></Link>
+                </div>
+                <div id="search-box"></div>
+              </div>
+            </div>
+            <div className="form-data">
+              <div className="border-selectors">
+                <div className="border-selector">
+                  {CountrySearch.filter === 'continent'?
+                  (<AiOutlineGlobal className="icon"/>):
+                  (<IoFitnessSharp className="icon"/>)}
+                  <select className="select-form" onChange={handleChange} name="filter" defaultValue={CountrySearch.filter}>
+                    <option value="continent">Continente</option>
+                    <option value="activities">Actividad</option>
+                  </select>
+                </div>
+                <div className="border-selector">
+                  {CountrySearch.filter === 'continent'?(
+                  <select className="select-form" onChange={handleChange} name="optionFilter" defaultValue={CountrySearch.optionFilterContinent}>
+                    <option value='all'>all</option>
+                    {CountrySearch.continentList.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
+                  </select>) :(
+                  <select className="select-form" onChange={handleChange} name="optionFilter" defaultValue={CountrySearch.optionFilterActivities}>
+                    <option value='all'>all</option>
+                    {CountrySearch.activitiesList.map((objOption) =>{return <option key={objOption} value={objOption}>{objOption}</option>})}
+                  </select>)}
+                </div>
+                <div className="border-selector">
+                  {CountrySearch.tipeOrden === 'name'?
+                  (<IoText className="icon"/>):
+                  (<IoPeopleCircleOutline className="icon"/>)}
+                  <select className="select-form" onChange={handleChange} name="tipeOrden" defaultValue={CountrySearch.tipeOrden}>
+                    <option value="name">Nombre</option>
+                    <option value="population">Poblacion</option>
+                  </select>
+                </div>
+                <div className="border-selector">
+                  {CountrySearch.tipeOrden === 'name'?
+                  (CountrySearch.order === 'ASC'?
+                  (<FaSortAlphaDown className="icon"/>):
+                  (<FaSortAlphaDownAlt className="icon"/>)):
+                  (CountrySearch.order === 'ASC'?
+                  (<FaSortNumericDown className="icon"/>):
+                  (<FaSortNumericDownAlt className="icon"/>))}
+                  <select className="select-form" onChange={handleChange} name="order" defaultValue={CountrySearch.order}>
+                    <option value="ASC">Acendente</option>
+                    <option value="DESC">Decendente</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  } if(CountrySearch.searchStatus === 'error') {
+    return (<div>console.error();</div>)
+  } else {
+    return (<div>cargando...</div>)
+  }
+};
