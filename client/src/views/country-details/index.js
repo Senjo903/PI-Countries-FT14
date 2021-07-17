@@ -17,6 +17,7 @@ function CountryDetails () {
   }, [countryID, dispatch]);
 
   return (
+    <><div className="align-views"></div>
     <div className="body-details">
       {Country ?
       (<div className="details">
@@ -50,7 +51,7 @@ function CountryDetails () {
       (<div>
         Pagina no encontrada o hubo un error
       </div>)}
-    </div>
+    </div></>
   );
 };
 

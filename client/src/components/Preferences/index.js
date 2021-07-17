@@ -85,7 +85,7 @@ export default function Preferences() {
             <div className="form-search">
               <div className="border-search box-column">
                 <div className="box-row">
-                  <input type='search' autoComplete="off" onChange={changeSearch} name="inputSearch" value={values.inputSearch} placeholder="buscar paises..." className="search"/>
+                  <input type='search' autoComplete="off" onChange={changeSearch} name="inputSearch" value={values.inputSearch} placeholder="search countries..." className="search"/>
                   <Link to={`/search-countries/${values.inputSearch}`} ><FaSearch className="icon"/></Link>
                 </div>
                 <div id="search-box"></div>
@@ -98,8 +98,8 @@ export default function Preferences() {
                   (<AiOutlineGlobal className="icon"/>):
                   (<IoFitnessSharp className="icon"/>)}
                   <select className="select-form" onChange={handleChange} name="filter" defaultValue={CountrySearch.filter}>
-                    <option value="continent">Continente</option>
-                    <option value="activities">Actividad</option>
+                    <option value="continent">Continent</option>
+                    <option value="activities">Activity</option>
                   </select>
                 </div>
                 <div className="border-selector">
@@ -118,8 +118,8 @@ export default function Preferences() {
                   (<IoText className="icon"/>):
                   (<IoPeopleCircleOutline className="icon"/>)}
                   <select className="select-form" onChange={handleChange} name="tipeOrden" defaultValue={CountrySearch.tipeOrden}>
-                    <option value="name">Nombre</option>
-                    <option value="population">Poblacion</option>
+                    <option value="name">Name</option>
+                    <option value="population">Population</option>
                   </select>
                 </div>
                 <div className="border-selector">
@@ -131,8 +131,8 @@ export default function Preferences() {
                   (<FaSortNumericDown className="icon"/>):
                   (<FaSortNumericDownAlt className="icon"/>))}
                   <select className="select-form" onChange={handleChange} name="order" defaultValue={CountrySearch.order}>
-                    <option value="ASC">Acendente</option>
-                    <option value="DESC">Decendente</option>
+                    <option value="ASC">Acendent</option>
+                    <option value="DESC">Decendent</option>
                   </select>
                 </div>
               </div>

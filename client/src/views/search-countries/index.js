@@ -17,11 +17,12 @@ function SearchCountries() {
   }, [fragmentName, dispatch]);
 
   return (
+    <><div className="align-views"></div>
     <div className="body-search2">
       {CountriesResult ?
       ((<div className="search2">
       <div className="border-box-data">
-        <div><h2>resultado de busqueda: {CountriesResult.results}</h2></div>
+        <div><h2>search result: {CountriesResult.results}</h2></div>
         <div>
           {CountriesResult.msj.map((country) => {
             return (<div className="item-search" key={country.ID}><Link className="link-search" to={`/country-details/${country.ID}`}>{country.name}</Link></div>)
@@ -37,6 +38,7 @@ function SearchCountries() {
         hubo un error
       </div>)}
     </div>
+    </>
   )
 };
 

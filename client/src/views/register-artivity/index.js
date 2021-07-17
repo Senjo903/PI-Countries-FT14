@@ -155,6 +155,8 @@ function RegisterActivity() {
     }
   }
   return (
+    <>
+    <div className="align-views"></div>
     <div className="body-register">
       <div className="register">
       <h1>Register Tourist Activity</h1>
@@ -248,6 +250,7 @@ function RegisterActivity() {
         </div>
       </div>)}
     </div>
+    </>
   )
 };
 

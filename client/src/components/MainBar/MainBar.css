@@ -2,6 +2,8 @@
 
 .body-nav {
     height: 55px;
+    position: absolute;
+    width: 100vw;
 }
 
 .nav {

@@ -14,13 +14,13 @@ export default function CardActivity(props) {
                 </div>
                 <div className="box-column">
                     <div className="activity-label">
-                        Actividad: {props.data.name}
+                        activity: {props.data.name}
                     </div>
                     <div className="activity-label">
-                        duracion: {props.data.duration}
+                        duration: {props.data.duration}
                     </div>
                     <div className="activity-label box-row">
-                        dificultad:
+                        difficulty:
                         <FaStar className={props.data.difficulty >= 1 ? 'starUp-activity space': 'star-activity space'}/>
                         <FaStar className={props.data.difficulty >= 2 ? 'starUp-activity': 'star-activity'}/>
                         <FaStar className={props.data.difficulty >= 3 ? 'starUp-activity': 'star-activity'}/>
@@ -28,7 +28,7 @@ export default function CardActivity(props) {
                         <FaStar className={props.data.difficulty >= 5 ? 'starUp-activity': 'star-activity'}/>
                     </div>
                     <div className="activity-label box-row">
-                        estacion: {props.data.station}
+                        station: {props.data.station}
                         {props.data.station === 'summer'?
                         (<FiSun className="station-activity summer-activity"/>):
                         props.data.station === 'fall'?

@@ -3,7 +3,7 @@ const { Country, Activity } = require('../db.js');
 const router = Router();
 
 router.post('/', async (req, res) =>{
-    const { name, difficulty, duration, station, countries } = req.body;
+    const { name, difficulty, duration, station, countries, imgURL } = req.body;
     //primero verificaremos que todos los datos tengan informacion
     if (name && difficulty && duration && station && countries ){
         //ahora revisaremos que las datos con valores fijos sean validos
@@ -45,13 +45,13 @@ router.post('/', async (req, res) =>{
                 const availability = await Activity.findOne({ where: { name: name } });
                 if (availability === null){
                     //si el nombre no esta ocupado ya podemos crear la nueva actividad
-                    return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station}, { include: [Country] })
+                    return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station, imgURL:imgURL }, { include: [Country] })
                         .then(async(activityResult)=>{
                         //seteamos la actividad la actividd con todos los paises
                         //return activityResult.setCountries(countriesValid);
                         let resultSet = await activityResult.setCountries(countriesValid);
                         //una ves seteada la actividd, la retornamos
-                        return res.json({activity: activityResult, countries: resultSet[0].map((country)=>{return country.countryID})});
+                        return res.status(201).json({activity: activityResult, countries: resultSet[0].map((country)=>{return country.countryID})});
                         })
                         .catch((e)=>{
                             // si hay error notificamos
@@ -59,7 +59,7 @@ router.post('/', async (req, res) =>{
                         });
                 } else {
                     //notificamos que la actividad ya existe
-                    return res.status(404).send({ error: 'The activity already exists' });//la actividad ya existe
+                    return res.status(404).json({ error: 'The activity already exists' });//la actividad ya existe
                 }
             }
         }

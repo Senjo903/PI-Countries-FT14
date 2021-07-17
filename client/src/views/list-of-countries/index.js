@@ -42,7 +42,7 @@ function ListOfCountries() {
   },[dispatch])
 
   return (
-    <div>
+    <div className="align-views">
       {CountrySearch.searchStatus !=='error'?
       (<div>
         <Preferences/>

@@ -1,14 +1,17 @@
-body {
-  background-image: url("img/Mapa_mundi.jpg") ;
-  background-repeat: no-repeat;
-  background-position-x: center;
-}
+body{
+  background: linear-gradient(to right, #63a8da, #9ecae8, #e2eff8, #e2eff8, #9ecae8, #63a8da)
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
-.App {
+.align-views {
+  padding-top: 55px;
+}
+.box-row {
+  display: flex;
+  flex-direction: row;
+}
+.box-column {
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (max-width: 800px) {

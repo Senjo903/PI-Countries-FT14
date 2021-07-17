@@ -10,7 +10,7 @@ import SearchCountries from './views/search-countries';
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Route path="/" component={MainBar} />
       <Switch>
         <Route path="/" exact component={Home}/>
