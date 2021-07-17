@@ -14,11 +14,12 @@
     background-color: rgb(255, 255, 255, 0.2);
     padding: 10px;
     border: 2px solid rgb(58, 58, 58);
-    margin: 10px;
+    margin: 20px;
+    margin-bottom: 30px;
 }
 .activity-label{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     margin-top: 10px;
     margin-left: 10px;

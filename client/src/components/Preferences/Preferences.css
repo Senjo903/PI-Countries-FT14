@@ -71,39 +71,30 @@
     display: flex;
     align-items: center;
     border-radius: 15px;
+    justify-content: center;
 }
-
 .select-form {
     height: 30px;
     background-color: rgb(255, 255, 255);
     border: 1px solid #000;
     border-radius: 10px;
 }
-#search-box {
+.search-box-absolute {
     margin: 0;
     position: relative;
     visibility: visible;
-    /*visibility: hidden*/
 }
-#search-countries-list {
+.search-countries-list {
     width: 470px;
     position: absolute;
     top: 0;
     right: -217px;
 }
-#search-countries-list div{
+.search-countries-list div{
     padding-top: 7px;
     background-color:#fff;
 }
-#search-countries-list div:hover{
+.search-countries-list div:hover{
     padding-top: 7px;
     background-color:rgb(212, 212, 212);
-}
-.box-row {
-    display: flex;
-    flex-direction: row;
-}
-.box-column {
-    display: flex;
-    flex-direction: column;
 }

@@ -8,11 +8,11 @@ import { SiSpring } from 'react-icons/si';
 export default function CardActivity(props) {
     return (
         <div className="body-activity">
-            <div className="card-activity">
-                <div>
+            <div id="card-activity" className="card-activity">
+                <div id="align-img-box">
                     <img className="activity-img" src={props.data.imgURL?props.data.imgURL:"https://mirabhayanderinfo.com/v2/uploads/images/image-not-found.jpg"} alt={props.data.name}/>
                 </div>
-                <div className="box-column">
+                <div id="box-column" className="box-column">
                     <div className="activity-label">
                         activity: {props.data.name}
                     </div>

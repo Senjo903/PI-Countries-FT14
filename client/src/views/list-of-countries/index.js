@@ -4,6 +4,7 @@ import { getData, getStatus, resetAll } from '../../actions';
 import TablaCountries from '../../components/TableCountries';
 import Preferences from '../../components/Preferences';
 import axios from 'axios';
+import ErrorMsj from '../../components/Error';
 
 function ListOfCountries() {
   const CountrySearch = useSelector((state) => state.CountrySearch);
@@ -48,9 +49,9 @@ function ListOfCountries() {
         <Preferences/>
         <TablaCountries/>
       </div>):
-      (<span>
-        tubimos un error
-      </span>)
+      (<div>
+        <ErrorMsj data="we could not load the server data"/>
+      </div>)
     }</div>
   )
 };

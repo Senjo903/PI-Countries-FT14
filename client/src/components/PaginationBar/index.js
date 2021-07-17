@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPage } from '../../actions';
 import './PaginationBar.css';
 
-
 export default function PaginationBar() {
     const CountrySearch = useSelector((state) => state.CountrySearch);
     const dispatch = useDispatch();
@@ -34,14 +33,14 @@ export default function PaginationBar() {
     return(
         <div className="border-pagination">
             <form onSubmit={handleSubmit}>
-                <div>
+                <div id="box-pagination">
                     {parseInt(CountrySearch.resultSearch.ActualPage) > 1?
-                    (<label onClick={prev} className="button-num">previous</label>):
-                    (<label></label>)}
+                    (<label onClick={prev} className="button-prev-next">previous</label>):
+                    (<></>)}
                     {Bottons.map((boton)=>{return boton})}
                     {parseInt(CountrySearch.resultSearch.ActualPage) < parseInt(CountrySearch.resultSearch.numberPages)?
-                    (<label className="button-num" onClick={next}>next</label>):
-                    (<label></label>)}
+                    (<label className="button-prev-next" onClick={next}>next</label>):
+                    (<></>)}
                 </div>
             </form>
         </div>

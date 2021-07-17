@@ -1,10 +1,14 @@
 import React from 'react';
+import './Error.css';
 
-
-function ErrorMsj() {
+function ErrorMsj(error) {
   return (
-    <div>
-        error
+    <div className="style-error">
+        <div className="box-error">
+          <h2 className="red">
+            Error: {error.data}
+          </h2>
+        </div>
     </div>
   )
 };

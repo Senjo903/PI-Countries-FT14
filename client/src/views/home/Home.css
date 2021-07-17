@@ -6,7 +6,6 @@
     background-repeat: no-repeat;
     background-size: cover;
     height: 400px;
-    width: 100%;
     border-radius: 0 0 200px 0;
     box-shadow: 0px 0px 20px;
 }
@@ -14,8 +13,6 @@
     height: 40px;
 }
 .style-box-three {
-    width: 100vw;
-    height: 440px;
     background-color: #459edb;
 }
 .style-box-four {
@@ -25,26 +22,22 @@
 }
 .home {
     text-align: center;
-    margin: auto;
-    max-width: 1050px;
     font-family: 'Bebas Neue', cursive;
     font-size: 20px;
     padding: 10px 40px;
     letter-spacing: 3px;
 }
 .style-body-contents {
-    width: 100vw;
     padding-top: 50px;
 }
 .box-contents {
-    margin: auto;
+    margin: 10px;
     width: 430px;
     height: 250px;
     background-color: rgba(255, 255, 255, 0.4);
     box-shadow: 0px 0px 10px;
     border-radius: 20px;
     align-items: center;
-
 }
 .icon-home {
     font-size: 50px;
@@ -65,4 +58,9 @@
     font-family: 'Bebas Neue', cursive;
     font-size: 20px;
     letter-spacing: 2px;
+}
+.flex-container2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }

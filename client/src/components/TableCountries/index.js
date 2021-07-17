@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import CardCountry from '../../components/CardCountry';
 import PaginationBar from '../../components/PaginationBar';
 import './TablesCountries.css';
+import ErrorMsj from '../../components/Error';
+import Loading from '../../components/Loading';
 
 export default function TableCountries() {
   const CountrySearch = useSelector((state) => state.CountrySearch);
@@ -21,8 +23,12 @@ export default function TableCountries() {
       </div>
     );
   } if(CountrySearch.searchStatus === 'error') {
-    return (<div>console.error();</div>)
+    return (<div>
+      <ErrorMsj data="we could not load the server data"/>
+    </div>)
   } else {
-    return (<div>cargando...</div>)
+    return (<div>
+      <Loading/>
+    </div>)
   }
 };
