@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
     },
     imgURL: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     continent: {
       type: DataTypes.STRING,
@@ -30,13 +30,13 @@ module.exports = (sequelize) => {
     },
     capital: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     subregion: {
       type: DataTypes.STRING
     },
     area: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       //allowNull: false,
     },
     population: {
