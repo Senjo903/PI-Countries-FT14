@@ -3,7 +3,7 @@ const { Country, Activity } = require('../db.js');
 const router = Router();
 
 router.post('/', async (req, res) =>{
-    const { name, difficulty, duration, station, countries, imgURL } = req.body;
+    const { name, difficulty, duration, station, countries, imgUrl } = req.body;
     //primero verificaremos que todos los datos tengan informacion
     if (name && difficulty && duration && station && countries ){
         //ahora revisaremos que las datos con valores fijos sean validos
@@ -45,7 +45,7 @@ router.post('/', async (req, res) =>{
                 const availability = await Activity.findOne({ where: { name: name } });
                 if (availability === null){
                     //si el nombre no esta ocupado ya podemos crear la nueva actividad
-                    return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station, imgURL:imgURL }, { include: [Country] })
+                    return Activity.create({ name: name, difficulty: difficulty, duration: duration, station: station, imgUrl:imgUrl }, { include: [Country] })
                         .then(async(activityResult)=>{
                         //seteamos la actividad la actividd con todos los paises
                         //return activityResult.setCountries(countriesValid);

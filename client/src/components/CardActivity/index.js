@@ -10,11 +10,11 @@ export default function CardActivity(props) {
         <div className="body-activity">
             <div id="card-activity" className="card-activity">
                 <div id="align-img-box">
-                    <img className="activity-img" src={props.data.imgURL?props.data.imgURL:"https://mirabhayanderinfo.com/v2/uploads/images/image-not-found.jpg"} alt={props.data.name}/>
+                    <img className="activity-img" src={props.data.imgUrl?props.data.imgUrl:"https://mirabhayanderinfo.com/v2/uploads/images/image-not-found.jpg"} alt={props.data.name}/>
                 </div>
                 <div id="box-column" className="box-column">
                     <div className="activity-label">
-                        activity: {props.data.name}
+                        activity : {props.data.name}
                     </div>
                     <div className="activity-label">
                         duration: {props.data.duration}

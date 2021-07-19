@@ -20,7 +20,7 @@ export default function reducer(state = initialState, { type, payload }) {
   switch (type) {
     case GET_COUNTRY:
       return { ...state,
-        CountrySearch:{
+        CountrySearch: {
           ...state.CountrySearch,
           searchStatus: 'complete',
           continentList: payload.continentList,

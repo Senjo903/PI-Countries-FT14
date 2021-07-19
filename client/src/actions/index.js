@@ -37,7 +37,6 @@ export function countryDetail(countryID) {
         return dispatch({ type: COUNTRY_DETAIL, payload: null })
       })
   }
-
 }
 export function clearCountry(payload) {
   return { type: CLEAR_COUNTRY, payload: payload }
@@ -51,7 +50,6 @@ export function searchDetail(fragmentName) {
         return dispatch({ type: SEARCH_DETAIL, payload: null })
       })
   }
-
 }
 export function clearSearch(payload) {
   return { type: CLEAR_SEARCH, payload: payload }

@@ -1,6 +1,8 @@
 const { Country, Continent } = require('../db.js');
 const axios = require('axios');
-
+const green = "\x1b[32m";
+const red = "\x1b[31m";
+const reset = "\x1b[0m";
 //cargando db por primera ves si ya hay datos no ara nada solo avisar
 async function searchData() {
     //revisamos si la tabla de paises tiene datos
@@ -23,12 +25,12 @@ async function upData() {
   //con axios obtenemos los datos de paises
   const ResultAxios = await axios.get('https://restcountries.eu/rest/v2/all').then((r) => {
     console.log('');
-    console.log('Successful search !!');//búsqueda exitosa
+    console.log(green + 'Successful search !!' + reset);//búsqueda exitosa
     console.log('');
     return [true, r]
   }).catch((e) => {
     console.log('');
-    console.log('API search failure: ' + e);//error de búsqueda de API
+    console.log('API search failure: '+ red + e + reset);//error de búsqueda de API
     console.log('');
     return [false]
   });
@@ -46,7 +48,7 @@ async function upData() {
         continent: country.region,
         capital: country.capital,
         subregion: country.subregion,
-        area: country.area,
+        area: Math.trunc(country.area),
         population: country.population
       }
       //si el continente no esta en nuestra array de continentes lo agregamos hago este paso para evitar hacer 250 findOrCreate en la DB y ahorrar consultas
@@ -62,7 +64,7 @@ async function upData() {
     arraycontinents.forEach((name) => {
       arrayPromisesContinent.push(Continent.create({ name: name })
         .then(()=>{
-          console.log('>> ' + name + ' << Successfully loaded into DB');//cargado con éxito en db
+          console.log(green + '>> ' + reset + name + green + ' << Successfully loaded into DB' + reset);//cargado con éxito en db
       }).catch((e)=>{
         console.log('>> Continent: ' + name + e);
       })
@@ -82,7 +84,7 @@ async function upData() {
     arrayCountrys.forEach((country) => {
       arrayPromises.push(Country.create(country)
         .then((r)=>{
-          console.log('>> ' + country.name + ': Successfully loaded into DB');//cargado con éxito en la DB
+          console.log(green + '>> '+ reset + country.name + ': ' + green + 'Successfully loaded into DB' + reset);//cargado con éxito en la DB
           returnArray.push([true, country.name]);
       }).catch((e)=>{
         //guardamos los nombres de paises que tubieron errores para avisar luego
@@ -109,7 +111,7 @@ function checkData(result){
     //si hay errores los listaremos
     if(errorsNum !== 0){
       console.log('');
-      console.log('Countries that could NOT be loaded correctly:');//países que NO se pudieron cargar correctamente
+      console.log(red +'Countries that could NOT be loaded correctly:' + reset);//países que NO se pudieron cargar correctamente
       console.log('');
       errors.forEach(element => {
         console.log('>> ' + element[1]);
@@ -117,7 +119,7 @@ function checkData(result){
     }
     console.log('');
     //mostraremos los totales
-    console.log('TOTAL: ' + successfullUpload + ' countries loaded to DB / TOTAL: ' + errorsNum + ' countries with error loading in DB')
+    console.log(green + 'TOTAL: ' + successfullUpload + ' countries loaded to DB ' + reset + '/ '+red+'TOTAL: ' + errorsNum + ' countries with error loading in DB' + reset)
     console.log('');
   }
 }

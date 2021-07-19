@@ -1,6 +1,6 @@
 const { Activity, Country, conn } = require('../../src/db.js');
 const { expect } = require('chai');
-/*
+
 const argentina = {
   ID: 'ARG',
   name: 'argentina',
@@ -229,5 +229,3 @@ describe('validación de modelos', () => {
     });
   });
 });
-
-*/
